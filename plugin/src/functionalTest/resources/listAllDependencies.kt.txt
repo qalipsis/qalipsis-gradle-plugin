@@ -1,0 +1,40 @@
+/*
+ * Lists and describes the dependencies added to the project.
+ */
+configurations
+    .filter { it.dependencies.isNotEmpty() }
+    .filterNot {
+        it.name.startsWith("test")
+                || it.name.endsWith("Test")
+                || it.name.startsWith("kotlin")
+    }
+    .forEach { configuration ->
+        val dependencies = configuration.dependencies
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = "\n - ", prefix = "\n - ") { dependency ->
+                var result =
+                    "${dependency.group}:${dependency.name}:${dependency.version ?: "<unspecified>"}"
+
+                if (dependency is ExternalDependency) {
+                    val classifier =
+                        dependency.artifacts.joinToString { it.classifier ?: "" }.takeIf { it.isNotEmpty() }
+                    if (classifier != null) {
+                        result += ":${classifier}"
+                    } else {
+                        result += ":<unspecified>"
+                    }
+                    val category = dependency.attributes.getAttribute(Category.CATEGORY_ATTRIBUTE)
+                    if (category != null) {
+                        result = "(${category.name}) $result"
+                    }
+                }
+                result
+            }
+
+        if (dependencies != null) {
+            logger.lifecycle("${configuration.name}: $dependencies")
+        } else {
+            logger.lifecycle("${configuration.name}: No dependency was found!!!")
+        }
+
+    }

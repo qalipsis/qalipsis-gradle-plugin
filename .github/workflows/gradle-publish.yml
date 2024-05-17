@@ -1,0 +1,58 @@
+name: Publish Gradle Plugin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest' ]
+        java: [ '11' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1 # https://github.com/actions/setup-java
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1.0.4
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2.2.0
+        with:
+          arguments: clean build --refresh-dependencies
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v2
+        if: always()
+        with:
+          report_paths: '**/build/test-results/*/TEST-*.xml'
+          fail_on_failure: true
+          summary: true
+
+      - name: Prepare publishing configuration
+        env:
+          SIGNING_KEY_ID: ${{ secrets.SONATYPE_OSS_SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SONATYPE_OSS_SIGNING_PASSWORD }}
+          SIGNING_PRIVATE_KEY: ${{ secrets.SONATYPE_OSS_SIGNING_PRIVATE_KEY_BASE_64 }}
+          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
+          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+        run:
+          echo "gradle.publish.key=$GRADLE_PUBLISH_KEY" >> $HOME/.gradle/gradle.properties ;
+          echo "gradle.publish.secret=$GRADLE_PUBLISH_SECRET" >> $HOME/.gradle/gradle.properties ;
+          echo "signing.keyId=$SIGNING_KEY_ID" >> $HOME/.gradle/gradle.properties ;
+          echo "signing.password=$SIGNING_PASSWORD" >> $HOME/.gradle/gradle.properties ;
+          echo "$SIGNING_PRIVATE_KEY" | base64 --decode > /tmp/privateKey.txt ;
+          echo "signing.secretKeyRingFile=/tmp/privateKey.txt" >> $HOME/.gradle/gradle.properties
+
+      - name: Publish plugin
+        uses: gradle/gradle-build-action@v2.2.0
+        with:
+          arguments: publishPlugins
