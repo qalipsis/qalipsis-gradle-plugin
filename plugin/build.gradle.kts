@@ -6,8 +6,8 @@ plugins {
     `java-test-fixtures`
 
     // Apply the Kotlin JVM plugin to add support for Kotlin.
-    kotlin("jvm") version "1.8.21"
-    kotlin("kapt") version "1.8.21"
+    kotlin("jvm") version "2.1.0"
+    kotlin("kapt") version "2.1.0"
     publishing
     signing
     id("com.gradle.plugin-publish") version "1.2.1"
@@ -15,12 +15,13 @@ plugins {
 }
 
 group = "io.qalipsis.gradle"
-version = "0.1.1"
+version = "0.1.2"
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
+
 
 gradlePlugin {
     website.set("https://qalipsis.io")
@@ -29,7 +30,7 @@ gradlePlugin {
     val bootstrap by plugins.creating {
         id = "io.qalipsis.bootstrap"
         displayName = "QALIPSIS Bootstrap Gradle Plugin"
-        description = "Simplify the creation of new QALIPSIS projects and integration into CI/CD pipelines"
+        description = "Simplifies the creation of new QALIPSIS projects and integration into CI/CD pipelines"
         tags.set(
             listOf(
                 "qalipsis",
@@ -37,7 +38,9 @@ gradlePlugin {
                 "test",
                 "testing",
                 "load",
+                "load-test",
                 "load-testing",
+                "end-to-end-test",
                 "end-to-end-testing",
                 "performance",
                 "performance-testing",
@@ -48,6 +51,32 @@ gradlePlugin {
             )
         )
         implementationClass = "io.qalipsis.gradle.bootstrap.QalipsisBootstrapPlugin"
+    }
+    val cloud by plugins.creating {
+        id = "io.qalipsis.cloud"
+        displayName = "QALIPSIS Cloud Gradle Plugin"
+        description = "Deploy and execute your QALIPSIS tests worldwide"
+        tags.set(
+            listOf(
+                "qalipsis",
+                "qa",
+                "test",
+                "testing",
+                "load",
+                "load-test",
+                "load-testing",
+                "end-to-end-test",
+                "end-to-end-testing",
+                "performance",
+                "performance-testing",
+                "continuous-integration",
+                "continuous-delivery",
+                "ci",
+                "cd",
+                "cloud",
+            )
+        )
+        implementationClass = "io.qalipsis.gradle.cloud.QalipsisCloudPlugin"
     }
 }
 
@@ -64,7 +93,6 @@ if (System.getProperty(signingKeyId) != null || System.getenv(signingKeyId) != n
         publishing.publications.forEach { sign(it) }
     }
 }
-
 tasks {
     withType<KotlinCompile>().configureEach {
         kotlinOptions {
@@ -95,14 +123,22 @@ tasks {
 
 kapt {
     useBuildCache = false
-
 }
 
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation("com.squareup.okhttp3:okhttp-sse")
+    implementation("com.squareup.okhttp3:okhttp-tls")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection")
+    implementation(platform("com.fasterxml.jackson:jackson-bom:2.15.1"))
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.+")
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -114,17 +150,36 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.testcontainers:mockserver:1.20.6")
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.6")
+    testImplementation("org.mock-server:mockserver-netty-no-dependencies:5.15.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0")
+    implementation(platform("io.ktor:ktor-bom:3.1.1"))
+    testFixturesImplementation(platform("io.ktor:ktor-bom:3.1.1"))
+    testFixturesImplementation("io.ktor:ktor-server-core")
+    testFixturesImplementation("io.ktor:ktor-server-netty")
+    testFixturesImplementation("io.ktor:ktor-server-sse")
+    testFixturesImplementation("io.ktor:ktor-server-test-host")
+    testImplementation("org.junit.platform:junit-platform-launcher:1.12.1")
+    testImplementation("io.ktor:ktor-server-core")
+    testImplementation("io.ktor:ktor-server-netty")
+    testImplementation("io.ktor:ktor-server-sse")
+    testImplementation("io.ktor:ktor-server-test-host")
+    testImplementation("io.mockk:mockk:1.13.17")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1")
     testImplementation(gradleTestKit())
 }
 
 // Add a source set for the functional test suite
-val functionalTestSourceSet = sourceSets.create("functionalTest") {
-}
+val functionalTestSourceSet = sourceSets.create("functionalTest")
+
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 configurations["kaptFunctionalTest"].extendsFrom(configurations["kaptTest"])
 
-project.logger.lifecycle(configurations.filter { it.name.lowercase().contains("functional") }.toString())
-
+configurations.filter { it.name.contains("functional", true) }.forEach {
+    project.logger.lifecycle("Configuration: ${it.name}: ${it.allDependencies.joinToString { "${it.group}:${it.name}:${it.version}" }}")
+}
 
 // Add a task to run the functional tests
 val functionalTest by tasks.registering(Test::class) {
