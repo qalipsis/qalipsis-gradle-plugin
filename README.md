@@ -1,8 +1,11 @@
 # QALIPSIS Gradle Plugin 
 
 ![CI](https://github.com/qalipsis/qalipsis-gradle-plugin/actions/workflows/gradle-main.yml/badge.svg)
+![Gradle Plugin Portal Version](https://img.shields.io/gradle-plugin-portal/v/io.qalipsis.bootstrap?label=Gradle%20Portal%20Version&style=flat&color=0055ff)
 
-The QALIPSIS Gradle Plugin simplifies the creation of new QALIPSIS projects and integration into CI pipelines.
+The QALIPSIS Gradle Plugin simplifies the creation of new QALIPSIS projects and integration into CI pipelines.  
+The bootstrap plugin simplifies the creation of a new QALIPSIS project.  
+The cloud plugin allows for the upload, management and execution of scenarios into the QALIPSIS cloud environment. 
 
 ## Setup
 
@@ -10,7 +13,7 @@ The QALIPSIS Gradle Plugin simplifies the creation of new QALIPSIS projects and 
 
 ```kotlin
 plugins {
-    id("io.qalipsis.bootstrap") version "0.1.0"
+    id("io.qalipsis.bootstrap") version "0.1.2"
 }
 ```
 
@@ -18,7 +21,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.bootstrap' version '0.1.0'
+    id 'io.qalipsis.bootstrap' version '0.1.2'
 }
 ```
 
@@ -30,7 +33,7 @@ The plugin includes a default QALIPSIS version, but you can specify a different 
 
 ```kotlin
 qalipsis {
-    version("0.10.a")
+    version("0.13.a")
 }
 ```
 
@@ -38,7 +41,7 @@ qalipsis {
 
 ```groovy
 qalipsis {
-    version = '0.10.a'
+    version = '0.13.a'
 }
 ```
 
@@ -47,7 +50,7 @@ qalipsis {
 Add to `gradle.properties` or Gradle execution options:
 
 ```properties
-qalipsis.version=0.10.a
+qalipsis.version=0.13.a
 ```
 
 ## Adding QALIPSIS Plugins
@@ -93,6 +96,33 @@ Available plugins:
 - `redisLettuce`
 - `slack`
 - `timescaleDb`
+
+
+## Applying the cloud plugin
+```kotlin
+plugins {
+    id("io.qalipsis.cloud") version "0.1.2"
+}
+```
+
+### Groovy
+
+```groovy
+plugins {
+    id 'io.qalipsis.cloud' version '0.1.2'
+}
+```
+## Configuring the cloud plugin
+To ensure proper configuration of the QALIPSIS cloud plugin, the following 
+environment variables should be defined: 
+```properties
+# Root url to use to access to the factory builder defaults to the value below.
+qalipsis.cloud.registry.url=https://app.qalipsis.io/api/scenarios"
+# Flag to specify if scenarios should be listed or not.
+qalipsis.cloud.registry.list=true
+# The token generated from the QALIPSIS GUI or from the api.
+qalipsis.cloud.registry.token=api-token
+```
 
 ## Executing QALIPSIS
 
