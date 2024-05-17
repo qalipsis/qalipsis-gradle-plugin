@@ -15,12 +15,13 @@ plugins {
 }
 
 group = "io.qalipsis.gradle"
-version = "0.1.1"
+version = "0.1.2"
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
+
 
 gradlePlugin {
     website.set("https://qalipsis.io")
@@ -37,7 +38,9 @@ gradlePlugin {
                 "test",
                 "testing",
                 "load",
+                "load-test",
                 "load-testing",
+                "end-to-end-test",
                 "end-to-end-testing",
                 "performance",
                 "performance-testing",
@@ -48,6 +51,32 @@ gradlePlugin {
             )
         )
         implementationClass = "io.qalipsis.gradle.bootstrap.QalipsisBootstrapPlugin"
+    }
+    val cloud by plugins.creating {
+        id = "io.qalipsis.cloud"
+        displayName = "QALIPSIS Cloud Gradle Plugin"
+        description = "Deploy and execute your QALIPSIS tests worldwide"
+        tags.set(
+            listOf(
+                "qalipsis",
+                "qa",
+                "test",
+                "testing",
+                "load",
+                "load-test",
+                "load-testing",
+                "end-to-end-test",
+                "end-to-end-testing",
+                "performance",
+                "performance-testing",
+                "continuous-integration",
+                "continuous-delivery",
+                "ci",
+                "cd",
+                "cloud",
+            )
+        )
+        implementationClass = "io.qalipsis.gradle.cloud.QalipsisCloudPlugin"
     }
 }
 
@@ -101,6 +130,15 @@ kapt {
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation("com.squareup.okhttp3:okhttp-sse")
+    implementation("com.squareup.okhttp3:okhttp-tls")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection")
+    implementation(platform("com.fasterxml.jackson:jackson-bom:2.15.1"))
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.+")
 
@@ -115,6 +153,41 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation(gradleTestKit())
+
+    kaptTest(platform("io.micronaut:micronaut-bom:3.9.3"))
+    kaptTest("io.micronaut:micronaut-inject-java")
+    testAnnotationProcessor(platform("io.micronaut:micronaut-bom:3.9.3"))
+    testAnnotationProcessor("io.micronaut:micronaut-inject-java")
+
+    testImplementation(platform("io.micronaut:micronaut-bom:3.9.3"))
+    testImplementation("io.micronaut.test:micronaut-test-junit5")
+    testImplementation("io.micronaut:micronaut-context")
+
+    kaptTestFixtures(platform("io.micronaut:micronaut-bom:3.9.3"))
+    kaptTestFixtures("io.micronaut.data:micronaut-data-processor")
+    kaptTestFixtures("io.micronaut:micronaut-http-validation")
+    kaptTestFixtures("io.micronaut:micronaut-inject-java")
+
+    testFixturesImplementation(platform("io.micronaut:micronaut-bom:3.9.3"))
+    testFixturesImplementation(platform("com.fasterxml.jackson:jackson-bom:2.15.1"))
+    testFixturesImplementation("io.micronaut:micronaut-validation")
+    testFixturesImplementation("io.micronaut.beanvalidation:micronaut-hibernate-validator")
+    testFixturesImplementation("io.micronaut:micronaut-runtime")
+    testFixturesImplementation("io.micronaut:micronaut-http-server-netty")
+    testFixturesImplementation("io.micronaut:micronaut-jackson-databind")
+    testFixturesImplementation("io.micronaut.kotlin:micronaut-kotlin-extension-functions")
+    testFixturesImplementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
+    testFixturesImplementation("io.micronaut.reactor:micronaut-reactor")
+    testFixturesImplementation("org.jetbrains.kotlin:kotlin-reflect")
+    testFixturesImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    testFixturesImplementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+    testFixturesImplementation("io.projectreactor:reactor-core")
+    testFixturesImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.7")
+    testFixturesImplementation("io.github.microutils:kotlin-logging:2.1.23")
+    testFixturesImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    testFixturesImplementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    testFixturesImplementation("org.apache.commons:commons-lang3:3.13.0")
+    testFixturesImplementation("ch.qos.logback:logback-classic")
 }
 
 // Add a source set for the functional test suite

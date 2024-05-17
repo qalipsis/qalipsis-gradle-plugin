@@ -1,0 +1,18 @@
+micronaut:
+  application:
+    name: qalipsis-factory-builder
+
+  server:
+    thread-selection: IO
+    port: ${random.port}
+
+  executors:
+    io:
+      n-threads: 100
+      type: cached
+      core-pool-size: 30
+
+netty:
+  default:
+    allocator:
+      max-order: 3
