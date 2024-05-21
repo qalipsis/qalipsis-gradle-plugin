@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "io.qalipsis.gradle"
-version = "0.1.0"
+version = "0.1.1"
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -29,9 +29,24 @@ gradlePlugin {
     val bootstrap by plugins.creating {
         id = "io.qalipsis.bootstrap"
         displayName = "QALIPSIS Bootstrap Gradle Plugin"
-        description =
-            "A plugins that helps you to create new projects for QALIPSIS, a load, performance and end-to-end testing software"
-        tags.set(listOf("qalipsis", "testing", "loadTesting", "endToEndTesting"))
+        description = "Simplify the creation of new QALIPSIS projects and integration into CI/CD pipelines"
+        tags.set(
+            listOf(
+                "qalipsis",
+                "qa",
+                "test",
+                "testing",
+                "load",
+                "load-testing",
+                "end-to-end-testing",
+                "performance",
+                "performance-testing",
+                "continuous-integration",
+                "continuous-delivery",
+                "ci",
+                "cd",
+            )
+        )
         implementationClass = "io.qalipsis.gradle.bootstrap.QalipsisBootstrapPlugin"
     }
 }
