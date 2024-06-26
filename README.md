@@ -2,9 +2,11 @@
 
 ![CI](https://github.com/qalipsis/qalipsis-gradle-plugin/actions/workflows/gradle-main.yml/badge.svg)
 
-The QALIPSIS Gradle Plugin simplifies the creation of new QALIPSIS projects and integration into CI pipelines.
+The QALIPSIS Gradle plugin simplifies the creation of new QALIPSIS projects and the integration of QALIPSIS projects into CI pipelines.
 
 ## Setup
+
+The Gradle plugin is integrated into the Bootstrap project. From the cloned/downloaded bootstrap project on your computer, open the `build.gradle.kts` file in your project directory.
 
 ### Kotlin
 
@@ -24,18 +26,20 @@ plugins {
 
 ## Version Configuration
 
-The plugin includes a default QALIPSIS version, but you can specify a different one:
+The plugin includes a default QALIPSIS version. You can specify a different version in the appropriate `build` file or as a Gradle property.
 
-### In `build.gradle.kts` (Kotlin)
+### Kotlin
 
+In `build.gradle.kts`: 
 ```kotlin
 qalipsis {
     version("0.10.a")
 }
 ```
 
-### In `build.gradle` (Groovy)
+### Groovy
 
+In `build.gradle`:
 ```groovy
 qalipsis {
     version = '0.10.a'
@@ -52,10 +56,11 @@ qalipsis.version=0.10.a
 
 ## Adding QALIPSIS Plugins
 
-To integrate QALIPSIS plugins, configure them in `build.gradle.kts` or `build.gradle`:
+You can integrate QALIPSIS plugins by configuring them in the appropriate `build` file.
 
-### Kotlin
+###  Kotlin
 
+In `build.gradle.kts`"
 ```kotlin
 qalipsis {
     plugins {
@@ -66,7 +71,7 @@ qalipsis {
 ```
 
 ### Groovy
-
+In `build.gradle`:
 ```groovy
 qalipsis {
     plugins {
