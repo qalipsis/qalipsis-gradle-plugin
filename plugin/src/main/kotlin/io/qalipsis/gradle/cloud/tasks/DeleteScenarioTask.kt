@@ -69,5 +69,4 @@ internal abstract class DeleteScenarioTask @Inject constructor(
 
     }
 
-
 }

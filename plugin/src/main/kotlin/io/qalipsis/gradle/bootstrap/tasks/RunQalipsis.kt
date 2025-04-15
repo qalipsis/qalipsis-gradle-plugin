@@ -30,7 +30,7 @@ abstract class RunQalipsis @Inject constructor(
         mainClass.set("io.qalipsis.runtime.Qalipsis")
 
         // The compilation should be triggered before the execution.
-        project.afterEvaluate{
+        project.afterEvaluate {
             dependsOn(project.tasks.getByPath("classes"))
         }
     }
