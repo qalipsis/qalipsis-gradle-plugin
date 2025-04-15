@@ -137,8 +137,6 @@ internal class SSEListenerTests {
 
     @Test
     fun `should properly handle closing of the listener when there are no errors`() {
-        // given
-
         // when
         sseListener.onClosed(eventSource)
 
