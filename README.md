@@ -180,6 +180,75 @@ tasks.create('executeRestApiSpikeTest', RunQalipsis) {
 }
 ```
 
+### Executing Campaigns
+The `qalipsisRunCampaign` creates and executes a new campaign in the cloud.
+
+### Kotlin
+
+```kotlin
+tasks {
+    create("qalipsisRunCampaign", CloudRunQalipsis::class.java) {
+        campaign {
+            campaignName.set("Dummy campaign configuration")
+            speedFactor.set(2.0)
+            startOffsetMs.set(2000)
+            campaignTimeout.set("PT1H30M")
+            hardTimeout.set(false)
+            // Configure your scenario(s) as needed.
+            scenario("My scenario 1") {
+                minionsCount = 7
+                zones {
+                    "CH" to 45
+                    "AS" to 55
+                }
+                // Any implementation of the profile configuration(more, regular, stages, immediate, 
+                // percentage, accelerate, timeframe) can be configured in the profile block.
+                profile {
+                    more(
+                        periodMs = 11,
+                        minionsCountProLaunchAtStart = 23,
+                        multiplier = 2.0,
+                        maxMinionsCountProLaunch = 7
+                    )
+                }
+            }
+        }
+    }
+}
+```
+
+### Groovy
+
+```groovy
+tasks.create('executeRestApiSpikeTest', RunQalipsis) {
+    campaign {
+        campaignName = "Dummy campaign configuration"
+        speedFactor = 2.0
+        startOffsetMs = 2000
+        campaignTimeout = "PT1H30M"
+        hardTimeout = false
+        // Configure your scenario(s) as needed.
+        scenario("My scenario 1") {
+            minionsCount = 7
+            zones {
+                CH 45
+                AS 55
+            }
+            // Any implementation of the profile configuration(more, regular, stages, immediate, 
+            // percentage, accelerate, timeframe) can be configured in the profile block.
+            profile {
+                more {
+                    periodMs = 11
+                    minionsCountProLaunchAtStart = 23
+                    multiplier = 2.0
+                    maxMinionsCountProLaunch = 7
+                }
+            }
+        }
+    }
+}
+```
+
 ## Additional Documentation
 
 Find more information at [docs.qalipsis.io](https://docs.qalipsis.io).
