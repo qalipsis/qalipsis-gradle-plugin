@@ -24,7 +24,7 @@ class ExternalExecutionProfileConfigurationImpl : ExternalExecutionProfileConfig
         profile = ImmediateProfileConfigurationImpl()
     }
 
-    override fun percentages(completionMode: CompletionMode, block: PercentageStageConfiguration.() -> Unit) {
+    override fun percentage(completionMode: CompletionMode, block: PercentageStageConfiguration.() -> Unit) {
         profile = PercentageStageProfileConfigurationImpl().also {
             it.completion = completionMode
             it.block()

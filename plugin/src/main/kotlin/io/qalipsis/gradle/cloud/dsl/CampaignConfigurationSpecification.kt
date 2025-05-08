@@ -11,7 +11,7 @@ import org.gradle.api.provider.Property
 @CampaignMarker
 abstract class CampaignConfigurationSpecification {
 
-    abstract val campaignName: Property<String>
+    abstract val campaignName: String
     abstract val speedFactor: Property<Double>
     abstract val startOffsetMs: Property<Long>
     abstract val campaignTimeout: Property<String>
@@ -33,19 +33,19 @@ abstract class CampaignConfigurationSpecification {
  *
  *  @author Francisca Eze
  */
-class CampaignConfigurationSpecificationImpl(objects: ObjectFactory) : CampaignConfigurationSpecification() {
-    override val campaignName: Property<String> = objects.property(String::class.java)
-    override val speedFactor: Property<Double> = objects.property(Double::class.java)
-    override val startOffsetMs: Property<Long> = objects.property(Long::class.java)
-    override val campaignTimeout: Property<String> = objects.property(String::class.java)
-    override val hardTimeout: Property<Boolean> = objects.property(Boolean::class.java)
+class CampaignConfigurationSpecificationImpl(name: String, objectFactory: ObjectFactory) : CampaignConfigurationSpecification() {
+    override val campaignName: String = name
+    override val speedFactor: Property<Double> = objectFactory.property(Double::class.java)
+    override val startOffsetMs: Property<Long> = objectFactory.property(Long::class.java)
+    override val campaignTimeout: Property<String> = objectFactory.property(String::class.java)
+    override val hardTimeout: Property<Boolean> = objectFactory.property(Boolean::class.java)
 
     /**
      * Converts the campaign dsl specification to a CampaignConfiguration type.
      */
     internal fun toCampaignConfiguration(): CampaignConfiguration {
         return CampaignConfiguration(
-            name = campaignName.get(),
+            name = campaignName,
             speedFactor = speedFactor.get(),
             startOffsetMs = startOffsetMs.get(),
             timeout = campaignTimeout.getOrElse(null),

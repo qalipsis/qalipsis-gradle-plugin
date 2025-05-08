@@ -59,8 +59,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     java
                 }
                 tasks.register<CloudRunQalipsis>("qalipsisRunCampaign") {
-                    campaign {
-                        campaignName.set("Dummy campaign configuration")
+                    campaign("Dummy campaign configuration") {
                         speedFactor.set(2.0)
                         startOffsetMs.set(2000)
                         campaignTimeout.set("PT1H30M")
@@ -126,7 +125,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     """
                         {
                             "version": "2025-04-28T13:09:43.533Z",
-                            "key": "Dummy campaign configuration",
+                            "key": "r0g0u1piyI",
                             "creation": "2025-04-28T13:09:43.533Z",
                             "name": "Dummy campaign configuration",
                             "speedFactor": 2.0,
@@ -163,6 +162,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
         result.output shouldContain """
             Task :qalipsisRunCampaign
             Starting a new campaign with name Dummy campaign configuration
+            You can retrieve the details of the campaign from the link http://localhost:$mockPort/api/campaigns/campaigns/r0g0u1piyI
         """.trimIndent()
         assertEquals(TaskOutcome.SUCCESS, result.task(":qalipsisRunCampaign")?.outcome)
     }
@@ -188,8 +188,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     java
                 }
                 tasks.register<CloudRunQalipsis>("qalipsisRunCampaign") {
-                    campaign {
-                        campaignName.set("Dummy campaign configuration")
+                    campaign("Dummy campaign configuration") {
                         speedFactor.set(2.0)
                         startOffsetMs.set(2000)
                         campaignTimeout.set("PT1H30M")
@@ -284,7 +283,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     """
                         {
                             "version": "2025-04-28T13:09:43.533Z",
-                            "key": "Dummy campaign configuration",
+                            "key": "r0g0u1piyI",
                             "creation": "2025-04-28T13:09:43.533Z",
                             "name": "Dummy campaign configuration",
                             "speedFactor": 2.0,
@@ -326,6 +325,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
         result.output shouldContain """
             Task :qalipsisRunCampaign
             Starting a new campaign with name Dummy campaign configuration
+            You can retrieve the details of the campaign from the link http://localhost:$mockPort/api/campaigns/campaigns/r0g0u1piyI
         """.trimIndent()
         assertEquals(TaskOutcome.SUCCESS, result.task(":qalipsisRunCampaign")?.outcome)
     }
@@ -352,8 +352,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     java
                 }
                 tasks.register<CloudRunQalipsis>("qalipsisRunCampaign") {
-                    campaign {
-                        campaignName.set("Dummy campaign configuration")
+                    campaign("Dummy campaign configuration") {
                         speedFactor.set(2.0)
                         startOffsetMs.set(2000)
                         campaignTimeout.set("PT1H30M")
@@ -459,8 +458,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     java
                 }
                 tasks.register<CloudRunQalipsis>("qalipsisRunCampaign") {
-                    campaign {
-                        campaignName.set("Dummy campaign configuration")
+                    campaign("Dummy campaign configuration") {
                         speedFactor.set(2.0)
                         startOffsetMs.set(2000)
                         campaignTimeout.set("PT1H30M")
@@ -564,8 +562,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                     java
                 }
                 tasks.register<CloudRunQalipsis>("qalipsisRunCampaign") {
-                    campaign {
-                        campaignName.set("Dummy campaign configuration")
+                    campaign("Dummy campaign configuration") {
                         speedFactor.set(2.0)
                         startOffsetMs.set(2000)
                         campaignTimeout.set("PT1H30M")
@@ -649,6 +646,112 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
         // Then
         result.output shouldContain """
             Service is temporarily unavailable. Please try again later.
+        """.trimIndent()
+        assertEquals(TaskOutcome.FAILED, result.task(":qalipsisRunCampaign")?.outcome)
+    }
+
+    @Test
+    fun `should return the right error message when there is a validation error from creating campaigns`(@TempDir tempFolder: Path) {
+        // Given
+        val propertiesFile = tempFolder.resolve("gradle.properties")
+        propertiesFile.writeText(
+            """
+                qalipsis.cloud.registry.url=http://localhost:${mockPort}/api/campaigns
+                qalipsis.cloud.registry.list=false
+                qalipsis.cloud.registry.token=wrong-token
+            """.trimIndent()
+        )
+        val buildFile = tempFolder.resolve("build.gradle.kts")
+        buildFile.writeText(
+            """
+                import io.qalipsis.gradle.cloud.tasks.CloudRunQalipsis  
+                
+                plugins {
+                    id("io.qalipsis.cloud")
+                    java
+                }
+                tasks.register<CloudRunQalipsis>("qalipsisRunCampaign") {
+                    campaign("Du") {
+                        speedFactor.set(2.0)
+                        startOffsetMs.set(2000)
+                        campaignTimeout.set("PT1H30M")
+                        hardTimeout.set(false)
+                        scenario("My scenario 1") {
+                            minionsCount = 7
+                            zones {
+                               "CH" to 45
+                               "AS" to 55
+                            }
+                            profile {
+                                more(
+                                    periodMs = 11, 
+                                    minionsCountProLaunchAtStart = 23, 
+                                    multiplier = 2.0, 
+                                    maxMinionsCountProLaunch = 7
+                                )
+                            }
+                        }
+                    }
+                }
+            """.trimIndent()
+        )
+        mockServerClient.`when`(
+            request()
+                .withPath("/api/campaigns")
+                .withMethod("POST")
+                .withHeader(Header("Authorization", "Bearer wrong-token"))
+                .withBody(
+                    JsonBody.json(
+                        """
+                            {
+                            "name": "Du",
+                            "speedFactor": 2.0,
+                            "startOffsetMs": 2000,
+                            "timeout": "PT1H30M",
+                            "hardTimeout": false,
+                            "scenarios": {
+                                "My scenario 1": {
+                                    "minionsCount": 7,
+                                    "zones": {
+                                        "CH": 45,
+                                        "AS": 55
+                                    },
+                                    "executionProfile": {
+                                        "profile": "PROGRESSING_VOLUME",
+                                        "periodMs": 11,
+                                        "minionsCountProLaunchAtStart": 23,
+                                        "multiplier": 2.0,
+                                        "maxMinionsCountProLaunch": 7
+                                    }
+                                }
+                            }
+                        }
+                        """.trimIndent()
+                    )
+                )
+        ).respond(
+            response()
+                .withStatusCode(400)
+                .withHeader(Header("Content-Type", "application/json; charset=utf-8"))
+                .withBody(
+                    """
+                        {"errors":[{"property":"campaign.name","message":"size must be between 3 and 300"}]}     
+                    """.trimIndent()
+                )
+        )
+
+        // When
+        val runner = GradleRunner.create()
+            .forwardOutput()
+            .withPluginClasspath()
+            .withProjectDir(tempFolder.toFile())
+            .withDebug(true)
+            .withArguments("qalipsisRunCampaign")
+        val result = runner.buildAndFail()
+
+        // Then
+        result.output shouldContain """
+            Property campaign.name size must be between 3 and 300
         """.trimIndent()
         assertEquals(TaskOutcome.FAILED, result.task(":qalipsisRunCampaign")?.outcome)
     }

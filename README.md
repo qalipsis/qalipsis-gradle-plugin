@@ -180,16 +180,15 @@ tasks.create('executeRestApiSpikeTest', RunQalipsis) {
 }
 ```
 
-### Executing Campaigns
-The `qalipsisRunCampaign` creates and executes a new campaign in the cloud.
+### Trigger a test campaign in the cloud
+The tasks created from the template `qalipsisRunCampaign` creates and executes a new campaign in the cloud.
 
 ### Kotlin
 
 ```kotlin
 tasks {
     create("qalipsisRunCampaign", CloudRunQalipsis::class.java) {
-        campaign {
-            campaignName.set("Dummy campaign configuration")
+        campaign("Test campaign") {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -198,18 +197,32 @@ tasks {
             scenario("My scenario 1") {
                 minionsCount = 7
                 zones {
-                    "CH" to 45
-                    "AS" to 55
+                    "US" to 45
+                    "DE" to 55
                 }
                 // Any implementation of the profile configuration(more, regular, stages, immediate, 
                 // percentage, accelerate, timeframe) can be configured in the profile block.
                 profile {
-                    more(
-                        periodMs = 11,
-                        minionsCountProLaunchAtStart = 23,
-                        multiplier = 2.0,
-                        maxMinionsCountProLaunch = 7
-                    )
+                    stages(completionMode = CompletionMode.HARD) {
+                        stage(
+                            minionsCount = 100,
+                            rampUpDurationMs = 10,
+                            totalDurationMs = 100000,
+                            resolutionMs = 10000
+                        )
+                        stage(
+                            minionsCount = 2000,
+                            rampUpDurationMs = 100,
+                            totalDurationMs = 10000,
+                            resolutionMs = 1000
+                        )
+                        stage(
+                            minionsCount = 5000,
+                            rampUpDurationMs = 2000,
+                            totalDurationMs = 1000,
+                            resolutionMs = 4000
+                        )
+                    }
                 }
             }
         }
@@ -220,9 +233,8 @@ tasks {
 ### Groovy
 
 ```groovy
-tasks.create('executeRestApiSpikeTest', RunQalipsis) {
-    campaign {
-        campaignName = "Dummy campaign configuration"
+tasks.create('qalipsisRunCampaign', CloudRunQalipsis) {
+    campaign("Test campaign") {
         speedFactor = 2.0
         startOffsetMs = 2000
         campaignTimeout = "PT1H30M"
@@ -231,17 +243,31 @@ tasks.create('executeRestApiSpikeTest', RunQalipsis) {
         scenario("My scenario 1") {
             minionsCount = 7
             zones {
-                CH 45
-                AS 55
+                US 45
+                DE 55
             }
             // Any implementation of the profile configuration(more, regular, stages, immediate, 
             // percentage, accelerate, timeframe) can be configured in the profile block.
             profile {
-                more {
-                    periodMs = 11
-                    minionsCountProLaunchAtStart = 23
-                    multiplier = 2.0
-                    maxMinionsCountProLaunch = 7
+                stages(completionMode = CompletionMode.HARD) {
+                    stage(
+                        minionsCount = 100,
+                        rampUpDurationMs = 10,
+                        totalDurationMs = 100000,
+                        resolutionMs = 10000
+                    )
+                    stage(
+                        minionsCount = 2000,
+                        rampUpDurationMs = 100,
+                        totalDurationMs = 10000,
+                        resolutionMs = 1000
+                    )
+                    stage(
+                        minionsCount = 5000,
+                        rampUpDurationMs = 2000,
+                        totalDurationMs = 1000,
+                        resolutionMs = 4000
+                    )
                 }
             }
         }

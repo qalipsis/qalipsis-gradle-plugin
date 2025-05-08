@@ -16,7 +16,7 @@ interface ExternalExecutionProfileConfiguration {
 
     fun immediate()
 
-    fun percentages(
+    fun percentage(
         completionMode: CompletionMode = CompletionMode.GRACEFUL,
         block: @ScenarioMarker PercentageStageConfiguration.() -> Unit
     )

@@ -21,8 +21,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should define a CampaignConfiguration instance from the dsl`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -44,8 +43,7 @@ internal class CampaignDslTest {
     internal fun `should throw an error for zone values greater than 100 percent`() {
         // given + when
         val exception = assertThrows<IllegalArgumentException> {
-            campaign(objectFactory) {
-                campaignName.set("Dummy campaign configuration")
+            campaign("Dummy campaign configuration", objectFactory) {
                 speedFactor.set(2.0)
                 startOffsetMs.set(2000)
                 campaignTimeout.set("PT1H30M")
@@ -68,8 +66,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow valid zone values`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -95,8 +92,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow null zone values`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -119,8 +115,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow null values for execution profiles`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -153,8 +148,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should accept multiple scenario entries`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -216,8 +210,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of ImmediateConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -259,8 +252,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of ProgressiveVolumeConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -310,8 +302,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of RegularConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -359,8 +350,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of AcceleratingConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -410,8 +400,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of TimeframeConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -457,8 +446,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of StagesConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -541,8 +529,7 @@ internal class CampaignDslTest {
     @Test
     internal fun `should allow profiles of PercentageStageConfigurationImpl types`() {
         // given + when
-        val campaign = campaign(objectFactory) {
-            campaignName.set("Dummy campaign configuration")
+        val campaign = campaign("Dummy campaign configuration", objectFactory) {
             speedFactor.set(2.0)
             startOffsetMs.set(2000)
             campaignTimeout.set("PT1H30M")
@@ -554,7 +541,7 @@ internal class CampaignDslTest {
                     "AS" to 55
                 }
                 profile {
-                    percentages(completionMode = CompletionMode.GRACEFUL) {
+                    percentage(completionMode = CompletionMode.GRACEFUL) {
                         stage(
                             minionsPercentage = 10.0,
                             rampUpDurationMs = 10,

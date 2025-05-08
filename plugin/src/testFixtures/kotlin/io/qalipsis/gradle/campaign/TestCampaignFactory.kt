@@ -11,10 +11,11 @@ import org.gradle.api.model.ObjectFactory
 object TestCampaignFactory {
 
     fun campaign(
+        name: String,
         projectObjects: ObjectFactory,
         block: CampaignConfigurationSpecification.() -> Unit
     ): CampaignConfiguration {
-        val spec = CampaignConfigurationSpecificationImpl(projectObjects)
+        val spec = CampaignConfigurationSpecificationImpl(name, projectObjects)
         spec.block()
         return spec.toCampaignConfiguration()
     }

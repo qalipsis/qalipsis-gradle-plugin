@@ -7,6 +7,7 @@ import io.qalipsis.gradle.cloud.dsl.CampaignConfigurationSpecification
 import io.qalipsis.gradle.cloud.dsl.CampaignConfigurationSpecificationImpl
 import io.qalipsis.gradle.cloud.model.Campaign
 import io.qalipsis.gradle.cloud.model.ErrorMessage
+import io.qalipsis.gradle.cloud.model.ErrorResponse
 import io.qalipsis.gradle.cloud.tasks.Helper.authenticate
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
@@ -16,6 +17,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.IOException
 import javax.inject.Inject
+
 
 /**
  * Task in charge of creating new campaigns in the cloud.
@@ -31,10 +33,10 @@ abstract class CloudRunQalipsis @Inject constructor() : DefaultTask() {
     /**
      * Uses a DSL-style configuration block to set up a [CampaignConfigurationSpecification].
      */
-    fun campaign(block: CampaignConfigurationSpecification.() -> Unit) {
-        val spec = CampaignConfigurationSpecificationImpl(project.objects)
-        spec.block()
-        this.campaignSpecification = spec
+    fun campaign(name: String, block: CampaignConfigurationSpecification.() -> Unit) {
+        val specification = CampaignConfigurationSpecificationImpl(name, project.objects)
+        specification.block()
+        this.campaignSpecification = specification
     }
 
     @TaskAction
@@ -51,7 +53,7 @@ abstract class CloudRunQalipsis @Inject constructor() : DefaultTask() {
             .authenticate(project)
             .post(requestBody)
             .build()
-        project.logger.lifecycle("Starting a new campaign with name ${campaignSpecification.campaignName.get()}")
+        project.logger.lifecycle("Starting a new campaign with name ${campaignSpecification.campaignName}")
 
         val campaign = Helper.httpClient.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
@@ -74,9 +76,16 @@ abstract class CloudRunQalipsis @Inject constructor() : DefaultTask() {
 
                     else -> {
                         val bodyString = response.body
-                        val errorMessage =
+                        val errorMessage = if (response.code == 400) {
+                            kotlin.runCatching {
+                               Helper.jsonMapper.readValue<ErrorResponse>(bodyString!!.bytes()).errors.joinToString(separator = ",\n") {
+                                    """Property ${it.property} ${it.message}""".trimIndent()
+                                }
+                            }.getOrDefault(bodyString.toString())
+                        } else {
                             kotlin.runCatching { Helper.jsonMapper.readValue<ErrorMessage>(bodyString!!.bytes()).message }
                                 .getOrDefault(bodyString.toString())
+                        }
                         throw RuntimeException(errorMessage)
                     }
                 }
@@ -85,6 +94,7 @@ abstract class CloudRunQalipsis @Inject constructor() : DefaultTask() {
             }
         }
         project.logger.debug("Campaign with key ${campaign.key} was started successfully")
+        project.logger.lifecycle("You can retrieve the details of the campaign from the link $url/campaigns/${campaign.key}")
     }
 
 
