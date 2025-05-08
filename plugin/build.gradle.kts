@@ -161,6 +161,7 @@ dependencies {
     testFixturesImplementation("io.ktor:ktor-server-netty")
     testFixturesImplementation("io.ktor:ktor-server-sse")
     testFixturesImplementation("io.ktor:ktor-server-test-host")
+    testFixturesImplementation(gradleApi())
     testImplementation("org.junit.platform:junit-platform-launcher:1.12.1")
     testImplementation("io.ktor:ktor-server-core")
     testImplementation("io.ktor:ktor-server-netty")
