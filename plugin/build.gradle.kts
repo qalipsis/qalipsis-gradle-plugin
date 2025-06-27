@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "io.qalipsis.gradle"
-version = "0.1.2"
+version = "0.1.3"
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -93,6 +93,7 @@ if (System.getProperty(signingKeyId) != null || System.getenv(signingKeyId) != n
         publishing.publications.forEach { sign(it) }
     }
 }
+
 tasks {
     withType<KotlinCompile>().configureEach {
         kotlinOptions {

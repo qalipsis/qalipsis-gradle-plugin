@@ -68,8 +68,13 @@ internal class QalipsisBootstrapPlugin : Plugin<Project> {
         if (qalipsisVersion.lowercase().endsWith("-snapshot")) {
             // When the version to use is a snapshot, the convenient repository is added.
             project.repositories.add(project.repositories.maven {
-                it.name = "maven-central-snapshots"
-                it.setUrl("https://oss.sonatype.org/content/repositories/snapshots")
+                it.name = "qalipsis-oss-snapshots"
+                it.setUrl("https://maven.qalipsis.com/repository/oss-snapshots")
+                it.content {
+                    it.includeGroup("io.qalipsis")
+                    it.includeGroup("io.qalipsis.plugin")
+                    it.includeGroup("io.qalipsis.gradle")
+                }
             })
         }
 
