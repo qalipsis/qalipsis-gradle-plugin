@@ -52,17 +52,17 @@ afterEvaluate {
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.14.a-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
         """.trimIndent()
         }
 
@@ -173,7 +173,7 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.14.a-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
@@ -182,13 +182,13 @@ implementation:
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
  - io.netty:netty-transport-native-kqueue:<unspecified>:osx-x86_64
  - org.slf4j:slf4j-api:1.7.36:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-netty:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
 runtimeOnly: 
  - io.netty:netty-transport-native-kqueue:<unspecified>:osx-x86_64
         """.trimIndent()
@@ -251,18 +251,18 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.14.a-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
  - io.qalipsis.plugin:$pluginDependency:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
         """.trimIndent()
         }
 
@@ -314,14 +314,14 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.14.a-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-cassandra:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
@@ -340,7 +340,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-timescaledb:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
         """.trimIndent()
         }
 
@@ -377,14 +377,14 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.14.a-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-cassandra:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
@@ -403,7 +403,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-timescaledb:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.14.a-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
         """.trimIndent()
         }
     }

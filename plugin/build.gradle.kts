@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "io.qalipsis.gradle"
-version = "0.1.3"
+version = rootProject.file("project.version").readText().trim()
 
 repositories {
     // Use Maven Central for resolving dependencies.

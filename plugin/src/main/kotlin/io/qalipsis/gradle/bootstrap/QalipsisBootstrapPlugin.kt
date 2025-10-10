@@ -1,18 +1,20 @@
 package io.qalipsis.gradle.bootstrap
 
 import io.qalipsis.gradle.bootstrap.tasks.RunQalipsis
+import java.net.URI
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.plugins.ApplicationPlugin
 import org.gradle.api.plugins.JavaApplication
-import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.application.CreateStartScripts
+import org.gradle.api.tasks.bundling.Zip
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlin.gradle.dsl.KaptExtensionConfig
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URI
 
 /**
  * Plugin to configure a QALIPSIS Gradle project with the default settings.
@@ -27,12 +29,9 @@ internal class QalipsisBootstrapPlugin : Plugin<Project> {
         project.pluginManager.apply(Kapt3GradleSubplugin::class.java)
         project.pluginManager.apply(ApplicationPlugin::class.java)
 
-        configureJava(project)
         configureKotlin(project)
-
-        project.extensions.configure<JavaApplication>("application") {
-            it.mainClass.set("io.qalipsis.runtime.Qalipsis")
-        }
+        configureApplication(project)
+        configureDistribution(project)
 
         project.dependencies.apply {
             add("implementation", "io.qalipsis:qalipsis-api-processors")
@@ -65,7 +64,9 @@ internal class QalipsisBootstrapPlugin : Plugin<Project> {
 
         project.logger.lifecycle("Using QALIPSIS $qalipsisVersion")
 
-        if (qalipsisVersion.lowercase().endsWith("-snapshot")) {
+        if (qalipsisVersion.lowercase().endsWith("-snapshot", ignoreCase = true)
+            || qalipsisVersion.lowercase().endsWith("-dev", ignoreCase = true)
+        ) {
             // When the version to use is a snapshot, the convenient repository is added.
             project.repositories.add(project.repositories.maven {
                 it.name = "qalipsis-oss-snapshots"
@@ -90,18 +91,75 @@ internal class QalipsisBootstrapPlugin : Plugin<Project> {
         }
     }
 
-    private fun configureJava(project: Project) {
-        project.extensions.configure<JavaPluginExtension>("java") {
-            it.sourceCompatibility = JAVA_VERSION
-            it.targetCompatibility = JAVA_VERSION
+    private fun configureApplication(project: Project) {
+        project.extensions.configure<JavaApplication>("application") {
+            it.mainClass.set("io.qalipsis.runtime.Qalipsis")
+        }
+    }
+
+    /**
+     * Overwrites the default start scripts to use the one from the distribution and add default configuration files.
+     */
+    private fun configureDistribution(project: Project) {
+        project.tasks.withType(CreateStartScripts::class.java).configureEach { startScripts ->
+            startScripts.enabled = false
+        }
+
+        val createQalipsisStartScripts = project.tasks.register("createQalipsisStartScripts") {
+            it.doLast {
+                copyDistributionFile(project, source = "config/logback.xml", target = "config/logback.xml")
+                copyDistributionFile(project, source = "config/qalipsis.yml", target = "config/qalipsis.yml")
+                copyDistributionFile(
+                    project,
+                    source = "start-scripts/unix.template",
+                    target = "scripts/${project.name}",
+                    executable = true
+                )
+                copyDistributionFile(
+                    project,
+                    source = "start-scripts/windows.template",
+                    target = "scripts/${project.name}.bat",
+                    executable = true
+                )
+            }
+        }
+
+        project.afterEvaluate {
+            val buildDir = project.layout.buildDirectory.get().asFile
+
+            project.tasks.withType(Zip::class.java).filter { it.name.contains("dist", true) }.forEach { zipTask ->
+                zipTask.dependsOn(createQalipsisStartScripts)
+                // Include config files
+                zipTask.from("$buildDir/config") {
+                    it.into("${project.name}-${project.version}/config")
+                }
+            }
+        }
+    }
+
+    private fun copyDistributionFile(project: Project, source: String, target: String, executable: Boolean = false) {
+        val targetFile = project.layout.buildDirectory.file(target).get().asFile
+        if (!targetFile.exists()) {
+            targetFile.parentFile.mkdirs()
+            targetFile.createNewFile()
+        }
+        if (executable) {
+            targetFile.setExecutable(true)
+        }
+
+        this::class.java.getResourceAsStream("/distribution/$source")!!.use { resource ->
+            resource.copyTo(targetFile.outputStream())
         }
     }
 
     private fun configureKotlin(project: Project) {
-        project.tasks.withType(KotlinCompile::class.java).configureEach {
-            it.kotlinOptions {
-                jvmTarget = JAVA_VERSION.majorVersion
-                javaParameters = true
+        project.extensions.configure(KotlinJvmExtension::class.java) {
+            it.jvmToolchain { toolchain ->
+                toolchain.languageVersion.set(JavaLanguageVersion.of(JAVA_VERSION.majorVersion))
+            }
+            it.compilerOptions {
+                freeCompilerArgs.add("-Xemit-jvm-type-annotations")
+                javaParameters.set(true)
             }
         }
         project.extensions.configure(KaptExtensionConfig::class.java) {
