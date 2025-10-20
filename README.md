@@ -13,7 +13,7 @@ The cloud plugin allows for the upload, management and execution of scenarios in
 
 ```kotlin
 plugins {
-    id("io.qalipsis.bootstrap") version "0.1.3"
+    id("io.qalipsis.bootstrap") version "0.1.4"
 }
 ```
 
@@ -21,7 +21,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.bootstrap' version '0.1.3'
+    id 'io.qalipsis.bootstrap' version '0.1.4'
 }
 ```
 
@@ -53,6 +53,33 @@ Add to `gradle.properties` or Gradle execution options:
 qalipsis.version=0.15.b
 ```
 
+## Creating a QALIPSIS head/factory-only project
+
+By default, the bootstrap plugin creates a QALIPSIS project with all dependencies for running as head, factory or standalone.
+You can then select at runtime which deployment mode you want to use.
+
+However, if you want to create a QALIPSIS project with only the dependencies for running as a head (respectively as a factory), you can call the statement 
+`qalipsis { asHead() }` (respectively `qalipsis { asFactory() }`) in your `build.gradle.kts` or `build.gradle` file.
+
+By doing so, you will have a QALIPSIS project with only the dependencies for running as head (respectively factory) and do not have to select
+the deployment mode at runtime.
+
+### In `build.gradle.kts` (Kotlin)
+
+```kotlin
+qalipsis {
+    asHead() // or asFactory()
+}
+```
+
+### In `build.gradle` (Groovy)
+
+```groovy
+qalipsis {
+    asHead() // or asFactory()
+}
+```
+
 ## Adding QALIPSIS Plugins
 
 To integrate QALIPSIS plugins, configure them in `build.gradle.kts` or `build.gradle`:
@@ -63,7 +90,7 @@ To integrate QALIPSIS plugins, configure them in `build.gradle.kts` or `build.gr
 qalipsis {
     plugins {
         apacheKafka()
-        jackson()
+        jackson("1.2.3") // You can override the version of the plugin.
     }
 }
 ```
@@ -74,7 +101,7 @@ qalipsis {
 qalipsis {
     plugins {
         apacheKafka()
-        jackson()
+        jackson("1.2.3") // You can override the version of the plugin.
     }
 }
 ```
@@ -101,7 +128,7 @@ Available plugins:
 ## Applying the cloud plugin
 ```kotlin
 plugins {
-    id("io.qalipsis.cloud") version "0.1.3"
+    id("io.qalipsis.cloud") version "0.1.4"
 }
 ```
 
@@ -109,7 +136,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.cloud' version '0.1.3'
+    id 'io.qalipsis.cloud' version '0.1.4'
 }
 ```
 ## Configuring the cloud plugin

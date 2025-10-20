@@ -3,11 +3,7 @@
  */
 configurations
     .filter { it.dependencies.isNotEmpty() }
-    .filterNot {
-        it.name.startsWith("test")
-                || it.name.endsWith("Test")
-                || it.name.startsWith("kotlin")
-    }
+    .filter { it.name in setOf("implementation", "kapt", "testImplementation", "runtimeOnly") }
     .forEach { configuration ->
         val dependencies = configuration.dependencies
             .takeIf { it.isNotEmpty() }

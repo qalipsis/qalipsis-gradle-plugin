@@ -8,130 +8,167 @@ open class QalipsisPluginsExtension {
 
     /**
      * Enables the QALIPSIS Apache Cassandra Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun apacheCassandra() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-cassandra"
+    fun apacheCassandra(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-cassandra" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "cassandra"
     }
 
     /**
      * Enables the QALIPSIS Apache Kafka Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun apacheKafka() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-kafka"
+    fun apacheKafka(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-kafka" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "kafka"
     }
 
     /**
      * Enables the QALIPSIS Elasticsearch Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun elasticsearch() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-elasticsearch"
+    fun elasticsearch(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-elasticsearch" + version?.let { ":$it" }
+            .orEmpty()
         requiredPlugins += "elasticsearch"
     }
 
     /**
      * Enables the QALIPSIS Graphite Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun graphite() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-graphite"
+    fun graphite(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-graphite" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "graphite"
     }
 
     /**
      * Enables the QALIPSIS Influx DB Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun influxDb() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-influxdb"
+    fun influxDb(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-influxdb" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "influxdb"
     }
 
     /**
      * Enables the QALIPSIS Jackson Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun jackson() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-jackson"
+    fun jackson(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-jackson" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "jackson"
     }
 
     /**
      * Enables the QALIPSIS Java Messaging Service Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun jms() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-jms"
+    fun jms(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-jms" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "jms"
     }
 
     /**
      * Enables the QALIPSIS Jakarta Messaging Service Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun jakartaMessaging() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-jakarta-ee-messaging"
+    fun jakartaMessaging(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-jakarta-ee-messaging" + version?.let { ":$it" }
+            .orEmpty()
         requiredPlugins += "jakarta-ee-messaging"
     }
 
     /**
      * Enables the QALIPSIS Mail Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun mail() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-mail"
+    fun mail(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-mail" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "mail"
     }
 
     /**
      * Enables the QALIPSIS Mongo DB Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun mongoDb() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-mongodb"
+    fun mongoDb(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-mongodb" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "mongodb"
     }
 
     /**
      * Enables the QALIPSIS Netty Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun netty() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-netty"
+    fun netty(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-netty" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "netty"
     }
 
 
     /**
      * Enables the QALIPSIS R2DBC Jasync Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun r2dbcJasync() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-r2dbc-jasync"
+    fun r2dbcJasync(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-r2dbc-jasync" + version?.let { ":$it" }
+            .orEmpty()
         requiredPlugins += "r2dbc-jasync"
     }
 
     /**
      * Enables the QALIPSIS RabbitMQ Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun rabbitMq() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-rabbitmq"
+    fun rabbitMq(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-rabbitmq" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "rabbitmq"
     }
 
     /**
      * Enables the QALIPSIS Redis Lettuce Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun redisLettuce() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-redis-lettuce"
+    fun redisLettuce(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-redis-lettuce" + version?.let { ":$it" }
+            .orEmpty()
         requiredPlugins += "redis-lettuce"
     }
 
     /**
      * Enables the QALIPSIS Redis Lettuce Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun slack() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-slack"
+    fun slack(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-slack" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "slack"
     }
 
     /**
      * Enables the QALIPSIS Timescale DB Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
-    fun timescaleDb() {
-        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-timescaledb"
+    fun timescaleDb(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-timescaledb" + version?.let { ":$it" }
+            .orEmpty()
         requiredPlugins += "timescaledb"
     }
 

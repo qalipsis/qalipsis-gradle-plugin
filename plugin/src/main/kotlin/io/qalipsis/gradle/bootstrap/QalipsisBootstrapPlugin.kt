@@ -1,5 +1,6 @@
 package io.qalipsis.gradle.bootstrap
 
+import io.qalipsis.gradle.bootstrap.QalipsisBootstrapExtension.DeploymentMode
 import io.qalipsis.gradle.bootstrap.tasks.RunQalipsis
 import java.net.URI
 import org.gradle.api.JavaVersion
@@ -38,8 +39,28 @@ internal class QalipsisBootstrapPlugin : Plugin<Project> {
             add("kapt", "io.qalipsis:qalipsis-api-processors")
 
             add("implementation", "io.qalipsis:qalipsis-runtime")
-            add("implementation", "io.qalipsis:qalipsis-head")
-            add("implementation", "io.qalipsis:qalipsis-factory")
+            project.afterEvaluate {
+                when (extension.deployment.get()) {
+                    DeploymentMode.HEAD -> {
+                        project.logger.lifecycle("Configuring QALIPSIS as a head only")
+                        add("implementation", "io.qalipsis:qalipsis-head")
+                    }
+
+                    DeploymentMode.FACTORY -> {
+                        project.logger.lifecycle("Configuring QALIPSIS as a factory only")
+                        add("implementation", "io.qalipsis:qalipsis-factory")
+                    }
+
+                    else -> {
+                        add("implementation", "io.qalipsis:qalipsis-head")
+                        add("implementation", "io.qalipsis:qalipsis-factory")
+                    }
+                }
+            }
+
+            // For testing we anyway need all the dependencies.
+            add("testImplementation", "io.qalipsis:qalipsis-head")
+            add("testImplementation", "io.qalipsis:qalipsis-factory")
         }
 
         // Configuration of elements depending on the configuration.

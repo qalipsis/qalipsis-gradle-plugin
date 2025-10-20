@@ -145,6 +145,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Use the Kotlin test library.
+    testImplementation("org.apache.commons:commons-lang3:3.19.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.kotest:kotest-assertions-core:5.5.+")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")

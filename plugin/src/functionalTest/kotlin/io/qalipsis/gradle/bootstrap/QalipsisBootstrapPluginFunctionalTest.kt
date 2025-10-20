@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import org.apache.commons.lang3.RandomStringUtils
 
 private const val GRADLE_BUILD_FILE = "build.gradle.kts"
 
@@ -52,17 +53,17 @@ afterEvaluate {
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.+"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
         """.trimIndent()
         }
 
@@ -173,24 +174,118 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.+"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
- - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
- - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
  - io.netty:netty-transport-native-kqueue:<unspecified>:osx-x86_64
  - org.slf4j:slf4j-api:1.7.36:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-netty:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
 runtimeOnly: 
  - io.netty:netty-transport-native-kqueue:<unspecified>:osx-x86_64
+testImplementation: 
+ - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
+        """.trimIndent()
+        }
+
+        @Test
+        fun `should load the plugin with the default version and as a head only`(@TempDir tempFolder: Path) {
+            // Given
+            val buildFile = tempFolder.resolve(GRADLE_BUILD_FILE)
+            buildFile.writeText(
+                """
+plugins {
+    id("io.qalipsis.bootstrap")
+}
+
+qalipsis {
+    asHead()
+}
+
+afterEvaluate {
+    $listDependencies
+}
+"""
+            )
+
+            // When
+            val runner = GradleRunner.create()
+                .withProjectDir(tempFolder.toFile())
+                .forwardOutput()
+                .withPluginClasspath()
+                .withDebug(true)
+                .withArguments("--stacktrace")
+            val result = runner.build()
+
+            // Then
+            val output = result.output
+            output shouldContain "Using QALIPSIS 0.+"
+            output shouldContain """
+implementation: 
+ - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
+kapt: 
+ - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
+testImplementation: 
+ - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
+        """.trimIndent()
+        }
+
+        @Test
+        fun `should load the plugin with the default version and as a factory only`(@TempDir tempFolder: Path) {
+            // Given
+            val buildFile = tempFolder.resolve(GRADLE_BUILD_FILE)
+            buildFile.writeText(
+                """
+plugins {
+    id("io.qalipsis.bootstrap")
+}
+
+qalipsis {
+    asFactory()
+}
+
+afterEvaluate {
+    $listDependencies
+}
+"""
+            )
+
+            // When
+            val runner = GradleRunner.create()
+                .withProjectDir(tempFolder.toFile())
+                .forwardOutput()
+                .withPluginClasspath()
+                .withDebug(true)
+                .withArguments("--stacktrace")
+            val result = runner.build()
+
+            // Then
+            val output = result.output
+            output shouldContain "Using QALIPSIS 0.+"
+            output shouldContain """
+implementation: 
+ - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
+kapt: 
+ - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
         """.trimIndent()
         }
     }
@@ -251,18 +346,88 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.+"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
  - io.qalipsis.plugin:$pluginDependency:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
+        """.trimIndent()
+        }
+
+
+        @ParameterizedTest
+        @CsvSource(
+            value = [
+                "apacheCassandra,qalipsis-plugin-cassandra",
+                "apacheKafka,qalipsis-plugin-kafka",
+                "elasticsearch,qalipsis-plugin-elasticsearch",
+                "graphite,qalipsis-plugin-graphite",
+                "influxDb,qalipsis-plugin-influxdb",
+                "jackson,qalipsis-plugin-jackson",
+                "jms,qalipsis-plugin-jms",
+                "jakartaMessaging,qalipsis-plugin-jakarta-ee-messaging",
+                "mail,qalipsis-plugin-mail",
+                "mongoDb,qalipsis-plugin-mongodb",
+                "netty,qalipsis-plugin-netty",
+                "r2dbcJasync,qalipsis-plugin-r2dbc-jasync",
+                "rabbitMq,qalipsis-plugin-rabbitmq",
+                "redisLettuce,qalipsis-plugin-redis-lettuce",
+                "slack,qalipsis-plugin-slack",
+                "timescaleDb,qalipsis-plugin-timescaledb",
+            ]
+        )
+        fun `should load the plugins with the specified version`(pluginExtension: String, pluginDependency: String, @TempDir tempFolder: Path) {
+            // Given
+            val buildFile = tempFolder.resolve(GRADLE_BUILD_FILE)
+            val pluginVersion = RandomStringUtils.secure().nextAlphanumeric(6)
+            buildFile.writeText(
+                """
+plugins {
+    id("io.qalipsis.bootstrap")
+}
+
+qalipsis {
+    plugins {
+        $pluginExtension("$pluginVersion")
+    }
+}
+
+afterEvaluate {
+$listDependencies
+}
+"""
+            )
+
+            // When
+            val runner = GradleRunner.create()
+                .withProjectDir(tempFolder.toFile())
+                .forwardOutput()
+                .withPluginClasspath()
+                .withDebug(true)
+                .withArguments("--stacktrace")
+            val result = runner.build()
+
+            // Then
+            val output = result.output
+            output shouldContain "Using QALIPSIS 0.+"
+            output shouldContain """
+implementation: 
+ - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
+ - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
+ - io.qalipsis.plugin:$pluginDependency:$pluginVersion:<unspecified>
+kapt: 
+ - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
         """.trimIndent()
         }
 
@@ -314,14 +479,14 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.+"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-cassandra:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
@@ -340,7 +505,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-timescaledb:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
         """.trimIndent()
         }
 
@@ -377,14 +542,14 @@ $listDependencies
 
             // Then
             val output = result.output
-            output shouldContain "Using QALIPSIS 0.15.b-SNAPSHOT"
+            output shouldContain "Using QALIPSIS 0.+"
             output shouldContain """
 implementation: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-runtime:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-head:<unspecified>:<unspecified>
  - io.qalipsis:qalipsis-factory:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-cassandra:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
@@ -403,7 +568,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-timescaledb:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
- - (platform) io.qalipsis:qalipsis-platform:0.15.b-SNAPSHOT:<unspecified>
+ - (platform) io.qalipsis:qalipsis-platform:0.+:<unspecified>
         """.trimIndent()
         }
     }

@@ -1,10 +1,10 @@
 package io.qalipsis.gradle.bootstrap
 
+import java.util.Properties
+import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
-import java.util.Properties
-import javax.inject.Inject
 
 private const val QALIPSIS_VERSION_KEY = "qalipsis.version"
 
@@ -13,12 +13,15 @@ private const val QALIPSIS_VERSION_KEY = "qalipsis.version"
  */
 open class QalipsisBootstrapExtension @Inject constructor(private val project: Project, objects: ObjectFactory) {
 
+    internal val deployment: Property<DeploymentMode> = objects.property(DeploymentMode::class.java)
+
     internal val version: Property<String> = objects.property(String::class.java)
 
     internal val plugins: Property<QalipsisPluginsExtension> = objects.property(QalipsisPluginsExtension::class.java)
 
     init {
         initQalipsisVersion()
+        deployment.set(DeploymentMode.STANDALONE)
     }
 
     /**
@@ -60,6 +63,20 @@ open class QalipsisBootstrapExtension @Inject constructor(private val project: P
     fun version() = version.get()
 
     /**
+     * Configures the project to create a QALIPSIS head-only node.
+     */
+    fun asHead() {
+        deployment.set(DeploymentMode.HEAD)
+    }
+
+    /**
+     * Configures the project to create a QALIPSIS factory-only node.
+     */
+    fun asFactory() {
+        deployment.set(DeploymentMode.FACTORY)
+    }
+
+    /**
      * Configures the plugins to enable for the scenario.
      */
     fun plugins(configure: QalipsisPluginsExtension.() -> Unit) {
@@ -67,6 +84,13 @@ open class QalipsisBootstrapExtension @Inject constructor(private val project: P
             plugins.set(QalipsisPluginsExtension())
         }
         plugins.get().configure()
+    }
+
+    /**
+     * Configures the dependencies to add for deployment purpose.
+     */
+    internal enum class DeploymentMode {
+        HEAD, FACTORY, STANDALONE
     }
 
 }
