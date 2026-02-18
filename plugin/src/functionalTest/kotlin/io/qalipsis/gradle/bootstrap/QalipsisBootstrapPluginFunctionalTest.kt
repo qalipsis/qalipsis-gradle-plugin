@@ -311,6 +311,7 @@ kapt:
                 "rabbitMq,qalipsis-plugin-rabbitmq",
                 "redisLettuce,qalipsis-plugin-redis-lettuce",
                 "slack,qalipsis-plugin-slack",
+                "sql,qalipsis-plugin-sql",
                 "timescaleDb,qalipsis-plugin-timescaledb",
             ]
         )
@@ -380,6 +381,7 @@ kapt:
                 "rabbitMq,qalipsis-plugin-rabbitmq",
                 "redisLettuce,qalipsis-plugin-redis-lettuce",
                 "slack,qalipsis-plugin-slack",
+                "sql,qalipsis-plugin-sql",
                 "timescaleDb,qalipsis-plugin-timescaledb",
             ]
         )
@@ -458,6 +460,7 @@ qalipsis {
         rabbitMq()
         redisLettuce()
         slack()
+        sql()
         timescaleDb()
     }
 }
@@ -502,6 +505,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-rabbitmq:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-redis-lettuce:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-slack:<unspecified>:<unspecified>
+ - io.qalipsis.plugin:qalipsis-plugin-sql:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-timescaledb:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>
@@ -565,6 +569,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-rabbitmq:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-redis-lettuce:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-slack:<unspecified>:<unspecified>
+ - io.qalipsis.plugin:qalipsis-plugin-sql:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-timescaledb:<unspecified>:<unspecified>
 kapt: 
  - io.qalipsis:qalipsis-api-processors:<unspecified>:<unspecified>

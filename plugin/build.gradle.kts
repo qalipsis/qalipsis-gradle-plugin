@@ -139,10 +139,11 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
-
     // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0")
+    implementation(platform("io.ktor:ktor-bom:3.1.1"))
+
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
 
     // Use the Kotlin test library.
     testImplementation("org.apache.commons:commons-lang3:3.19.0")
@@ -151,19 +152,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.testcontainers:mockserver:1.20.6")
+    testImplementation(platform("org.testcontainers:testcontainers-bom:2.+"))
+    testImplementation("org.testcontainers:testcontainers-mockserver")
     testImplementation("org.testcontainers:testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter:1.20.6")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
     testImplementation("org.mock-server:mockserver-netty-no-dependencies:5.15.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0")
-    implementation(platform("io.ktor:ktor-bom:3.1.1"))
-    testFixturesImplementation(platform("io.ktor:ktor-bom:3.1.1"))
-    testFixturesImplementation("io.ktor:ktor-server-core")
-    testFixturesImplementation("io.ktor:ktor-server-netty")
-    testFixturesImplementation("io.ktor:ktor-server-sse")
-    testFixturesImplementation("io.ktor:ktor-server-test-host")
-    testFixturesImplementation(gradleApi())
     testImplementation("org.junit.platform:junit-platform-launcher:1.12.1")
     testImplementation("io.ktor:ktor-server-core")
     testImplementation("io.ktor:ktor-server-netty")
@@ -172,6 +165,15 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.17")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1")
     testImplementation(gradleTestKit())
+
+    testFixturesImplementation(platform("io.ktor:ktor-bom:3.1.1"))
+    testFixturesImplementation("io.ktor:ktor-server-core")
+    testFixturesImplementation("io.ktor:ktor-server-netty")
+    testFixturesImplementation("io.ktor:ktor-server-sse")
+    testFixturesImplementation("io.ktor:ktor-server-test-host")
+    testFixturesImplementation(gradleApi())
+
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 // Add a source set for the functional test suite

@@ -1,9 +1,9 @@
 package io.qalipsis.gradle.bootstrap.tasks
 
+import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.JavaExec
-import javax.inject.Inject
 
 abstract class RunQalipsis @Inject constructor(
     objectFactory: ObjectFactory,
@@ -24,6 +24,12 @@ abstract class RunQalipsis @Inject constructor(
         group = "qalipsis"
         description = "Executes one or more scenarios using QALIPSIS"
 
+        jvmArgs(
+            "-Xss256k",
+            "-Xms256m",
+            "-XX:+UseG1GC",
+            "-XX:MaxGCPauseMillis=200"
+        )
         maxHeapSize = "256m"
         workingDir = project.projectDir
         // Forces the class to execute.

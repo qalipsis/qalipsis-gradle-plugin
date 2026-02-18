@@ -1,6 +1,7 @@
 package io.qalipsis.gradle
 
-import org.testcontainers.containers.MockServerContainer
+import kotlin.math.pow
+import org.testcontainers.mockserver.MockServerContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
@@ -15,9 +16,9 @@ abstract class MockserverBasedTest {
 
         @Container
         @JvmStatic
-        val container = MockServerContainer(DockerImageName.parse("mockserver/mockserver:5.15.0"))
+        val container = MockServerContainer(DockerImageName.parse("mockserver/mockserver"))
             .withCreateContainerCmdModifier {
-                it.hostConfig!!.withMemory((512 * 1e20).toLong()).withCpuCount(2)
+                it.hostConfig!!.withMemory((512 * 1024.0.pow(2)).toLong()).withCpuCount(2)
             }
             .withEnv("ES_JAVA_OPTS", "-Xms256m -Xmx256m")
             .withEnv("action.destructive_requires_name", "false")

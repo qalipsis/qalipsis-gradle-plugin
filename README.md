@@ -13,7 +13,7 @@ The cloud plugin allows for the upload, management and execution of scenarios in
 
 ```kotlin
 plugins {
-    id("io.qalipsis.bootstrap") version "0.1.4"
+    id("io.qalipsis.bootstrap") version "0.1.5"
 }
 ```
 
@@ -21,7 +21,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.bootstrap' version '0.1.4'
+    id 'io.qalipsis.bootstrap' version '0.1.5'
 }
 ```
 
@@ -33,7 +33,7 @@ The plugin includes a default QALIPSIS version, but you can specify a different 
 
 ```kotlin
 qalipsis {
-    version("0.15.b")
+    version("0.16.b")
 }
 ```
 
@@ -41,7 +41,7 @@ qalipsis {
 
 ```groovy
 qalipsis {
-    version = '0.15.b'
+    version = '0.16.b'
 }
 ```
 
@@ -50,7 +50,7 @@ qalipsis {
 Add to `gradle.properties` or Gradle execution options:
 
 ```properties
-qalipsis.version=0.15.b
+qalipsis.version=0.16.b
 ```
 
 ## Creating a QALIPSIS head/factory-only project
@@ -122,13 +122,14 @@ Available plugins:
 - `rabbitMq`
 - `redisLettuce`
 - `slack`
+- `sql`
 - `timescaleDb`
 
 
 ## Applying the cloud plugin
 ```kotlin
 plugins {
-    id("io.qalipsis.cloud") version "0.1.4"
+    id("io.qalipsis.cloud") version "0.1.5"
 }
 ```
 
@@ -136,7 +137,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.cloud' version '0.1.4'
+    id 'io.qalipsis.cloud' version '0.1.5'
 }
 ```
 ## Configuring the cloud plugin

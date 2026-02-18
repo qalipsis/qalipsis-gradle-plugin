@@ -152,13 +152,23 @@ open class QalipsisPluginsExtension {
     }
 
     /**
-     * Enables the QALIPSIS Redis Lettuce Plugin.
+     * Enables the QALIPSIS Slack Plugin.
      *
      * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
      */
     fun slack(version: String? = null) {
         requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-slack" + version?.let { ":$it" }.orEmpty()
         requiredPlugins += "slack"
+    }
+
+    /**
+     * Enables the QALIPSIS SQL Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
+     */
+    fun sql(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-sql" + version?.let { ":$it" }.orEmpty()
+        requiredPlugins += "sql"
     }
 
     /**
@@ -191,6 +201,7 @@ open class QalipsisPluginsExtension {
         rabbitMq()
         redisLettuce()
         slack()
+        sql()
         timescaleDb()
     }
 }
