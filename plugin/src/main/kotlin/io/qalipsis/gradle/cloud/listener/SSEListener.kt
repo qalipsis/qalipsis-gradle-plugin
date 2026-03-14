@@ -29,12 +29,12 @@ class SSEListener(
         val message = Helper.jsonMapper.readValue<LogMessage>(data)
         when (message.level) {
             "ERROR" -> {
-                errors += message.text
-                logger.error("[ERROR] {} {}", convertToLocaleTime(message.timestamp), message.text.trim())
+                errors += (message.text ?: "<Unknown error>")
+                logger.error("[ERROR] {} {}", convertToLocaleTime(message.timestamp), message.text?.trim())
             }
 
-            "DEBUG" -> logger.debug("[DEBUG] {} {}", convertToLocaleTime(message.timestamp), message.text.trim())
-            else -> logger.lifecycle("[INFO]  {} {}", convertToLocaleTime(message.timestamp), message.text.trim())
+            "DEBUG" -> logger.debug("[DEBUG] {} {}", convertToLocaleTime(message.timestamp), message.text?.trim())
+            else -> logger.lifecycle("[INFO]  {} {}", convertToLocaleTime(message.timestamp), message.text?.trim())
         }
     }
 

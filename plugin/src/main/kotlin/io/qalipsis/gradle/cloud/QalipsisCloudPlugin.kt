@@ -55,7 +55,7 @@ internal class QalipsisCloudPlugin : Plugin<Project> {
 
     internal companion object {
 
-        val DEFAULT_SCENARIOS_API_ROOT_URL = "https://app.qalipsis.io/api/scenarios".toHttpUrl()
+        val DEFAULT_SCENARIOS_API_ROOT_URL = "https://app.qalipsis.io/api/registry/scenarios".toHttpUrl()
 
     }
 }
