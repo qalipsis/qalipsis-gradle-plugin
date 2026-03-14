@@ -111,6 +111,7 @@ Available plugins:
 - `apacheKafka`
 - `elasticsearch`
 - `graphite`
+- `http`
 - `influxDb`
 - `jackson`
 - `jms`

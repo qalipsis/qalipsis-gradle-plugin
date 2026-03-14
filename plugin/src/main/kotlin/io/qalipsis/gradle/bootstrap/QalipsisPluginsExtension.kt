@@ -48,6 +48,16 @@ open class QalipsisPluginsExtension {
     }
 
     /**
+     * Enables the QALIPSIS HTTP Plugin.
+     *
+     * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
+     */
+    fun http(version: String? = null) {
+        requiredPluginsDependency += "io.qalipsis.plugin:qalipsis-plugin-http" + version?.let { ":$it" }.orEmpty()
+        requiredPlugins += "http"
+    }
+
+    /**
      * Enables the QALIPSIS Influx DB Plugin.
      *
      * @param version version of the plugin to use, defaults to the version provided by the configured QALIPSIS version.
@@ -190,6 +200,7 @@ open class QalipsisPluginsExtension {
         apacheKafka()
         elasticsearch()
         graphite()
+        http()
         influxDb()
         jackson()
         jms()

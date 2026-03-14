@@ -300,6 +300,7 @@ kapt:
                 "apacheKafka,qalipsis-plugin-kafka",
                 "elasticsearch,qalipsis-plugin-elasticsearch",
                 "graphite,qalipsis-plugin-graphite",
+                "http,qalipsis-plugin-http",
                 "influxDb,qalipsis-plugin-influxdb",
                 "jackson,qalipsis-plugin-jackson",
                 "jms,qalipsis-plugin-jms",
@@ -370,6 +371,7 @@ kapt:
                 "apacheKafka,qalipsis-plugin-kafka",
                 "elasticsearch,qalipsis-plugin-elasticsearch",
                 "graphite,qalipsis-plugin-graphite",
+                "http,qalipsis-plugin-http",
                 "influxDb,qalipsis-plugin-influxdb",
                 "jackson,qalipsis-plugin-jackson",
                 "jms,qalipsis-plugin-jms",
@@ -449,6 +451,7 @@ qalipsis {
         apacheKafka()
         elasticsearch()
         graphite()
+        http()
         influxDb()
         jackson()
         jms()
@@ -494,6 +497,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-graphite:<unspecified>:<unspecified>
+ - io.qalipsis.plugin:qalipsis-plugin-http:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-influxdb:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-jackson:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-jms:<unspecified>:<unspecified>
@@ -558,6 +562,7 @@ implementation:
  - io.qalipsis.plugin:qalipsis-plugin-kafka:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-elasticsearch:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-graphite:<unspecified>:<unspecified>
+ - io.qalipsis.plugin:qalipsis-plugin-http:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-influxdb:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-jackson:<unspecified>:<unspecified>
  - io.qalipsis.plugin:qalipsis-plugin-jms:<unspecified>:<unspecified>
