@@ -2,39 +2,32 @@ package io.qalipsis.gradle.cloud
 
 import io.kotest.matchers.string.shouldContain
 import io.qalipsis.gradle.MockserverBasedTest
+import java.nio.file.Path
+import kotlin.io.path.writeText
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockserver.client.MockServerClient
+import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.Header
 import org.mockserver.model.HttpRequest.request
 import org.mockserver.model.HttpResponse.response
-import java.nio.file.Path
-import kotlin.io.path.writeText
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
+internal class DeleteScenarioTaskFunctionalTest(
+    mockServer: ClientAndServer,
+) : MockserverBasedTest(mockServer) {
 
-    private var mockPort: Int = -1
-
-    private lateinit var mockServerClient: MockServerClient
-
-    @BeforeAll
-    fun init() {
-        mockPort = container.firstMappedPort
-        mockServerClient = MockServerClient(container.host, mockPort)
-    }
+    private var mockPort: Int = mockServer.localPort
 
     @AfterEach
     fun resetMockserver() {
-        mockServerClient.reset()
+        mockServer.reset()
     }
 
     @Test
@@ -57,7 +50,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios")
                 .withMethod("GET")
@@ -83,7 +76,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                     """.trimIndent()
                 )
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios/scenario-1")
                 .withMethod("DELETE")
@@ -92,7 +85,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
             response()
                 .withStatusCode(200)
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios/scenario-2")
                 .withMethod("DELETE")
@@ -149,7 +142,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios")
                 .withMethod("GET")
@@ -175,7 +168,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                     """.trimIndent()
                 )
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios/scenario-1")
                 .withMethod("DELETE")
@@ -232,7 +225,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios")
                 .withMethod("GET")
@@ -258,7 +251,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                     """.trimIndent()
                 )
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios/scenario-1")
                 .withMethod("DELETE")
@@ -307,7 +300,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios")
                 .withMethod("GET")
@@ -333,7 +326,7 @@ internal class DeleteScenarioTaskFunctionalTest : MockserverBasedTest() {
                     """.trimIndent()
                 )
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/scenarios/scenario-1")
                 .withMethod("DELETE")

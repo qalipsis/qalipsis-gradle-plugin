@@ -20,17 +20,29 @@ abstract class RunQalipsis @Inject constructor(
      */
     private val configuration = objectFactory.mapProperty(String::class.java, Any::class.java)
 
+    /**
+     * Default configuration for QALIPSIS.
+     */
+    private val defaultConfiguration = mapOf(
+        "report.export.console.enabled" to "true",
+        "report.export.console.target" to "file",
+        "report.export.console.folder" to project.layout.buildDirectory.dir("reports/qalipsis/text").get().asFile.path,
+        "report.export.html.enabled" to "true",
+        "report.export.html.folder" to project.layout.buildDirectory.dir("reports/qalipsis/html").get().asFile.path,
+        "report.export.junit.enabled" to "true",
+        "report.export.junit.folder" to project.layout.buildDirectory.dir("test-results/qalipsis").get().asFile.path,
+    )
+
     init {
         group = "qalipsis"
         description = "Executes one or more scenarios using QALIPSIS"
 
         jvmArgs(
+            "-XX:+MaxFDLimit",
             "-Xss256k",
             "-Xms256m",
-            "-XX:+UseG1GC",
-            "-XX:MaxGCPauseMillis=200"
         )
-        maxHeapSize = "256m"
+        maxHeapSize = "1g"
         workingDir = project.projectDir
         // Forces the class to execute.
         mainClass.set("io.qalipsis.runtime.Qalipsis")
@@ -59,10 +71,13 @@ abstract class RunQalipsis @Inject constructor(
         if (scenarios.isPresent && scenarios.get().isNotEmpty()) {
             arguments += listOf("-s", scenarios.get().joinToString { it.trim() })
         }
-        if (configuration.isPresent) {
-            configuration.get().forEach { (key, value) ->
-                arguments += listOf("-c", "$key=$value")
-            }
+        val actualConfiguration = if (configuration.isPresent) {
+            (defaultConfiguration + configuration.get())
+        } else {
+            defaultConfiguration
+        }
+        actualConfiguration.forEach { (key, value) ->
+            arguments += listOf("-c", "$key=$value")
         }
         project.logger.debug("Executing QALIPSIS: {}", arguments)
         return arguments

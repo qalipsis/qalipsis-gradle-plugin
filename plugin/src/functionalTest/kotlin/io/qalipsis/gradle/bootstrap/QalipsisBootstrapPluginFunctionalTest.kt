@@ -610,7 +610,7 @@ plugins {
             // Then
             val output = result.output
             output shouldContain "No enabled scenario could be found"
-            output shouldContain "Executing QALIPSIS: [--autostart]"
+            output shouldContain "QALIPSIS could not start"
         }
 
 
@@ -649,7 +649,11 @@ tasks {
 
             // Then
             val output = result.output
-            output shouldContain "Executing QALIPSIS: [--autostart, -s, scenario-1, scenario-2, -c, configuration1=true, -c, configuration2=a-value]"
+            output shouldContain "Executing QALIPSIS: [--autostart, -s, scenario-1, scenario-2"
+            output shouldContain "-c, report.export.console.enabled=true, -c, report.export.console.target=file, -c, report.export.console.folder="
+            output shouldContain "-c, report.export.html.enabled=true, -c, report.export.html.folder="
+            output shouldContain "-c, report.export.junit.enabled=true, -c, report.export.junit.folder="
+            output shouldContain "-c, configuration1=true, -c, configuration2=a-value]"
         }
     }
 }

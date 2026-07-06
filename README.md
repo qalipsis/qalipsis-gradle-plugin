@@ -13,7 +13,7 @@ The cloud plugin allows for the upload, management and execution of scenarios in
 
 ```kotlin
 plugins {
-    id("io.qalipsis.bootstrap") version "0.1.5"
+    id("io.qalipsis.bootstrap") version "0.1.6"
 }
 ```
 
@@ -21,7 +21,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.bootstrap' version '0.1.5'
+    id 'io.qalipsis.bootstrap' version '0.1.6'
 }
 ```
 
@@ -33,7 +33,7 @@ The plugin includes a default QALIPSIS version, but you can specify a different 
 
 ```kotlin
 qalipsis {
-    version("0.16.b")
+    version("0.18.e")
 }
 ```
 
@@ -41,7 +41,7 @@ qalipsis {
 
 ```groovy
 qalipsis {
-    version = '0.16.b'
+    version = '0.18.e'
 }
 ```
 
@@ -50,7 +50,7 @@ qalipsis {
 Add to `gradle.properties` or Gradle execution options:
 
 ```properties
-qalipsis.version=0.16.b
+qalipsis.version=0.18.e
 ```
 
 ## Creating a QALIPSIS head/factory-only project
@@ -130,7 +130,7 @@ Available plugins:
 ## Applying the cloud plugin
 ```kotlin
 plugins {
-    id("io.qalipsis.cloud") version "0.1.5"
+    id("io.qalipsis.cloud") version "0.1.6"
 }
 ```
 
@@ -138,7 +138,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'io.qalipsis.cloud' version '0.1.5'
+    id 'io.qalipsis.cloud' version '0.1.6'
 }
 ```
 ## Configuring the cloud plugin
@@ -155,11 +155,14 @@ qalipsis.cloud.registry.token=api-token
 qalipsis.cloud.api.url=https://app.qalipsis.io/api
 ```
 
-## Executing QALIPSIS
+## Executing QALIPSIS locally
 
 ### Default Execution
 
 The `qalipsisRunAllScenarios` task runs all scenarios in your project's classpath.
+
+All the tasks that extend `RunQalipsis` will save the text and HTML reports in the `build/report` folder and the JUnit results in the `build/test-results` folder. But you can easily disable or overwrite this
+by configuration, as shown below.
 
 ### Kotlin
 
@@ -167,8 +170,8 @@ The `qalipsisRunAllScenarios` task runs all scenarios in your project's classpat
 tasks {
     named("qalipsisRunAllScenarios") {
         configuration(
-            "report.export.junit.enabled" to "true",
-            "report.export.junit.folder" to project.layout.buildDirectory.dir("test-results/my-new-scenario").get().asFile.path
+            "report.export.html.enabled" to "true",
+            "report.export.html.folder" to project.layout.buildDirectory.dir("test-results/my-new-scenario").get().asFile.path
         )
     }
 }
@@ -178,8 +181,8 @@ tasks {
 
 ```groovy
 tasks.named('qalipsisRunAllScenarios') {
-    configuration 'report.export.junit.enabled': 'true',
-                  'report.export.junit.folder': layout.buildDirectory.dir('test-results/my-new-scenario').get().asFile.path
+    configuration 'report.export.html.enabled': 'true',
+                  'report.export.html.folder': layout.buildDirectory.dir('test-results/my-new-scenario').get().asFile.path
 }
 ```
 
@@ -194,8 +197,8 @@ tasks {
     create("executeRestApiSpikeTest", RunQalipsis::class.java) {
         scenarios("spike-test-of-rest-api", "constant-monitoring")
         configuration(
-            "report.export.junit.enabled" to "true",
-            "report.export.junit.folder" to project.layout.buildDirectory.dir("test-results/my-new-scenario").get().asFile.path
+            "report.export.html.enabled" to "true",
+            "report.export.html.folder" to project.layout.buildDirectory.dir("test-results/my-new-scenario").get().asFile.path
         )
     }
 }
@@ -206,8 +209,8 @@ tasks {
 ```groovy
 tasks.create('executeRestApiSpikeTest', RunQalipsis) {
     scenarios 'spike-test-of-rest-api', 'constant-monitoring'
-    configuration 'report.export.junit.enabled': 'true',
-                  'report.export.junit.folder': layout.buildDirectory.dir('test-results/my-new-scenario').get().asFile.path
+    configuration 'report.export.html.enabled': 'true',
+                  'report.export.html.folder': layout.buildDirectory.dir('test-results/my-new-scenario').get().asFile.path
 }
 ```
 

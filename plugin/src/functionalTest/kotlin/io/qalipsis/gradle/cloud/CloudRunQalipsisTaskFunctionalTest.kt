@@ -2,40 +2,34 @@ package io.qalipsis.gradle.cloud
 
 import io.kotest.matchers.string.shouldContain
 import io.qalipsis.gradle.MockserverBasedTest
+import java.nio.file.Path
+import kotlin.io.path.writeText
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockserver.client.MockServerClient
+import org.mockserver.integration.ClientAndServer
+import org.mockserver.matchers.MatchType
 import org.mockserver.model.Header
 import org.mockserver.model.HttpRequest.request
 import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.JsonBody
-import java.nio.file.Path
-import kotlin.io.path.writeText
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
+internal class CloudRunQalipsisTaskFunctionalTest(
+    mockServer: ClientAndServer,
+) : MockserverBasedTest(mockServer) {
 
-    private var mockPort: Int = -1
-
-    private lateinit var mockServerClient: MockServerClient
-
-    @BeforeAll
-    fun init() {
-        mockPort = container.firstMappedPort
-        mockServerClient = MockServerClient(container.host, mockPort)
-    }
+    private var mockPort: Int = mockServer.localPort
 
     @AfterEach
     fun resetMockserver() {
-        mockServerClient.reset()
+        mockServer.reset()
     }
 
     @Test
@@ -83,7 +77,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/api/campaigns")
                 .withMethod("POST")
@@ -114,7 +108,9 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                                 }
                             }
                         }
-                        """.trimIndent()
+                        """.trimIndent(),
+                        MatchType.ONLY_MATCHING_FIELDS,
+                        true // matchNumbersAsStrings
                     )
                 )
         ).respond(
@@ -227,7 +223,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/api/campaigns")
                 .withMethod("POST")
@@ -237,7 +233,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                         """
                             {
                             "name": "Dummy campaign configuration",
-                            "speedFactor": 2.0,
+                            "speedFactor": 2,
                             "startOffsetMs": 2000,
                             "timeout": "PT1H30M",
                             "hardTimeout": false,
@@ -252,7 +248,7 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                                         "profile": "PROGRESSING_VOLUME",
                                         "periodMs": 11,
                                         "minionsCountProLaunchAtStart": 23,
-                                        "multiplier": 2.0,
+                                        "multiplier": 2,
                                         "maxMinionsCountProLaunch": 7
                                     }
                                 },
@@ -267,12 +263,14 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                                         "profile": "REGULAR",
                                         "periodInMs": 1000,
                                         "minionsCountProLaunch": 100,
-                                        "totalMinionsCount": 2000,
+                                        "totalMinionsCount": 2000
                                     }
                                 }
                             }
                         }
-                        """.trimIndent()
+                        """.trimIndent(),
+                        MatchType.ONLY_MATCHING_FIELDS,
+                        true // matchNumbersAsStrings
                     )
                 )
         ).respond(
@@ -376,40 +374,10 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/api/campaigns")
                 .withMethod("POST")
-                .withHeader(Header("Authorization", "Bearer wrong-token"))
-                .withBody(
-                    JsonBody.json(
-                        """
-                            {
-                            "name": "Dummy campaign configuration",
-                            "speedFactor": 2.0,
-                            "startOffsetMs": 2000,
-                            "timeout": "PT1H30M",
-                            "hardTimeout": false,
-                            "scenarios": {
-                                "My scenario 1": {
-                                    "minionsCount": 7,
-                                    "zones": {
-                                        "CH": 45,
-                                        "AS": 55
-                                    },
-                                    "executionProfile": {
-                                        "profile": "PROGRESSING_VOLUME",
-                                        "periodMs": 11,
-                                        "minionsCountProLaunchAtStart": 23,
-                                        "multiplier": 2.0,
-                                        "maxMinionsCountProLaunch": 7
-                                    }
-                                }
-                            }
-                        }
-                        """.trimIndent()
-                    )
-                )
         ).respond(
             response()
                 .withStatusCode(statusCode)
@@ -482,40 +450,10 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/api/campaigns")
                 .withMethod("POST")
-                .withHeader(Header("Authorization", "Bearer wrong-token"))
-                .withBody(
-                    JsonBody.json(
-                        """
-                            {
-                            "name": "Dummy campaign configuration",
-                            "speedFactor": 2.0,
-                            "startOffsetMs": 2000,
-                            "timeout": "PT1H30M",
-                            "hardTimeout": false,
-                            "scenarios": {
-                                "My scenario 1": {
-                                    "minionsCount": 7,
-                                    "zones": {
-                                        "CH": 45,
-                                        "AS": 55
-                                    },
-                                    "executionProfile": {
-                                        "profile": "PROGRESSING_VOLUME",
-                                        "periodMs": 11,
-                                        "minionsCountProLaunchAtStart": 23,
-                                        "multiplier": 2.0,
-                                        "maxMinionsCountProLaunch": 7
-                                    }
-                                }
-                            }
-                        }
-                        """.trimIndent()
-                    )
-                )
         ).respond(
             response()
                 .withStatusCode(statusCode)
@@ -586,40 +524,10 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/api/campaigns")
                 .withMethod("POST")
-                .withHeader(Header("Authorization", "Bearer wrong-token"))
-                .withBody(
-                    JsonBody.json(
-                        """
-                            {
-                            "name": "Dummy campaign configuration",
-                            "speedFactor": 2.0,
-                            "startOffsetMs": 2000,
-                            "timeout": "PT1H30M",
-                            "hardTimeout": false,
-                            "scenarios": {
-                                "My scenario 1": {
-                                    "minionsCount": 7,
-                                    "zones": {
-                                        "CH": 45,
-                                        "AS": 55
-                                    },
-                                    "executionProfile": {
-                                        "profile": "PROGRESSING_VOLUME",
-                                        "periodMs": 11,
-                                        "minionsCountProLaunchAtStart": 23,
-                                        "multiplier": 2.0,
-                                        "maxMinionsCountProLaunch": 7
-                                    }
-                                }
-                            }
-                        }
-                        """.trimIndent()
-                    )
-                )
         ).respond(
             response()
                 .withStatusCode(503)
@@ -695,40 +603,11 @@ internal class CloudRunQalipsisTaskFunctionalTest : MockserverBasedTest() {
                 }
             """.trimIndent()
         )
-        mockServerClient.`when`(
+        mockServer.`when`(
             request()
                 .withPath("/api/campaigns")
                 .withMethod("POST")
                 .withHeader(Header("Authorization", "Bearer wrong-token"))
-                .withBody(
-                    JsonBody.json(
-                        """
-                            {
-                            "name": "Du",
-                            "speedFactor": 2.0,
-                            "startOffsetMs": 2000,
-                            "timeout": "PT1H30M",
-                            "hardTimeout": false,
-                            "scenarios": {
-                                "My scenario 1": {
-                                    "minionsCount": 7,
-                                    "zones": {
-                                        "CH": 45,
-                                        "AS": 55
-                                    },
-                                    "executionProfile": {
-                                        "profile": "PROGRESSING_VOLUME",
-                                        "periodMs": 11,
-                                        "minionsCountProLaunchAtStart": 23,
-                                        "multiplier": 2.0,
-                                        "maxMinionsCountProLaunch": 7
-                                    }
-                                }
-                            }
-                        }
-                        """.trimIndent()
-                    )
-                )
         ).respond(
             response()
                 .withStatusCode(400)
